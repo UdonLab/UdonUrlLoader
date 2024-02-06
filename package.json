@@ -1,0 +1,12 @@
+{
+    "name": "com.sonic853.udonlab.urlloader",
+    "displayName": "Udon Lab - Udon Url Loader",
+    "version": "1.0.0",
+    "unity": "2022.3",
+    "description": "The Udon Lab",
+    "author": {
+        "name": "Sonic853",
+        "email": "sonic853@qq.com",
+        "url": "https://853lab.booth.pm/"
+    }
+}
