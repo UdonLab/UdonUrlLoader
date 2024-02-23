@@ -23,6 +23,10 @@ namespace UdonLab.UrlLoader
         {
             Debug.LogError("Don't use this class directly, use UrlsImageLoader or UrlsStringLoader");
         }
+        public virtual void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName)
+        {
+            Debug.LogError("Don't use this class directly, use UrlsImageLoader or UrlsStringLoader");
+        }
         public void SendFunction(UdonBehaviour udonBehaviour, string customEvent = "", string variableName = "", object value = null)
         {
             if (!string.IsNullOrWhiteSpace(variableName))

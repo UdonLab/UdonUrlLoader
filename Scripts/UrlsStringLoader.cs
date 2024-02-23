@@ -24,7 +24,7 @@ namespace UdonLab.UrlLoader
             isLoading = true;
             VRCStringDownloader.LoadUrl(urls[0], GetComponent<UdonBehaviour>());
         }
-        public void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName)
+        public override void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName)
         {
             if (cacheContent && UdonArrayPlus.Contains(cacheUrls, url))
             {
