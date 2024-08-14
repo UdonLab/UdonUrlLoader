@@ -12,6 +12,7 @@ namespace UdonLab.UrlLoader
     {
         public Texture2D content;
         VRCImageDownloader _imageDownloader;
+        public Texture2D[] cacheContents;
         void Start()
         {
             _imageDownloader = new VRCImageDownloader();
@@ -20,17 +21,37 @@ namespace UdonLab.UrlLoader
                 LoadUrl();
             }
         }
-        public override void LoadUrl()
+        public override void LoadUrl(bool reload = false)
         {
-            if (string.IsNullOrEmpty(url.ToString()))
-                return;
-            isLoaded = false;
-            _imageDownloader.DownloadImage(url, null, GetComponent<UdonBehaviour>(), null);
+            if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, url, out var index) != -1)
+            {
+                SendFunction(udonSendFunction, sendCustomEvent, setVariableName, cacheContents[index]);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(url.ToString()))
+                    return;
+                isLoaded = false;
+                _imageDownloader.DownloadImage(url, null, GetComponent<UdonBehaviour>(), null);
+            }
         }
         public override void OnImageLoadSuccess(IVRCImageDownload result)
         {
             isLoaded = true;
             _retryCount = 0;
+            if (cacheContent)
+            {
+                var urli = UdonArrayPlus.IndexOf(cacheUrls, url);
+                if (urli == -1)
+                {
+                    cacheUrls = UdonArrayPlus.Add(cacheUrls, url);
+                    cacheContents = UdonArrayPlus.Add(cacheContents, result.Result);
+                }
+                else
+                {
+                    cacheContents[urli] = result.Result;
+                }
+            }
             content = result.Result;
             SendFunction(udonSendFunction, sendCustomEvent, setVariableName, content);
         }

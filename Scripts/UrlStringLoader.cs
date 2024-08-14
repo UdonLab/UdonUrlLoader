@@ -11,6 +11,7 @@ namespace UdonLab.UrlLoader
     public class UrlStringLoader : UrlLoaderCore
     {
         public string content;
+        public string[] cacheContents;
         void Start()
         {
             if (loadOnStart)
@@ -18,12 +19,19 @@ namespace UdonLab.UrlLoader
                 LoadUrl();
             }
         }
-        public override void LoadUrl()
+        public override void LoadUrl(bool reload = false)
         {
-            if (string.IsNullOrEmpty(url.ToString()))
-                return;
-            isLoaded = false;
-            VRCStringDownloader.LoadUrl(url, GetComponent<UdonBehaviour>());
+            if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, url, out var index) != -1)
+            {
+                SendFunction(udonSendFunction, sendCustomEvent, setVariableName, cacheContents[index]);
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(url.ToString()))
+                    return;
+                isLoaded = false;
+                VRCStringDownloader.LoadUrl(url, GetComponent<UdonBehaviour>());
+            }
         }
         public override void OnStringLoadSuccess(IVRCStringDownload result)
         {

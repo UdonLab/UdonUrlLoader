@@ -17,7 +17,10 @@ namespace UdonLab.UrlLoader
         public string setVariableName = "value";
         public int retryCount = 3;
         protected int _retryCount = 0;
-        public virtual void LoadUrl()
+        public bool cacheContent = false;
+        public VRCUrl[] cacheUrls;
+        public virtual void LoadUrl() => LoadUrl(false);
+        public virtual void LoadUrl(bool reload = false)
         {
             Debug.LogError("Don't use this class directly, use UrlsImageLoader or UrlsStringLoader");
         }

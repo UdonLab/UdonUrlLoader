@@ -15,15 +15,18 @@ namespace UdonLab.UrlLoader
         public UdonBehaviour[] udonSendFunctions;
         public string[] sendCustomEvents;
         public string[] setVariableNames;
+        public bool[] needReloads;
         public int retryCount = 3;
         protected int _retryCount = 0;
         public bool cacheContent = false;
         public VRCUrl[] cacheUrls;
-        public virtual void LoadUrl()
+        public virtual void LoadUrl() => LoadUrl(false);
+        public virtual void LoadUrl(bool reload = false)
         {
             Debug.LogError("Don't use this class directly, use UrlsImageLoader or UrlsStringLoader");
         }
-        public virtual void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName)
+        public virtual void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName) => PushUrl(url, udonSendFunction, sendCustomEvent, setVariableName, false);
+        public virtual void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName, bool reload = false)
         {
             Debug.LogError("Don't use this class directly, use UrlsImageLoader or UrlsStringLoader");
         }
