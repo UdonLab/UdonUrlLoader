@@ -46,7 +46,7 @@ jobs:
       - name: Create ZIP archive
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
         run: |
-          zip -r ${{ steps.read_version.outputs.name }}.zip . -x ".git*" ".github*"
+          zip -r ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip . -x ".git*" ".github*"
 
       - name: Release
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
@@ -83,4 +83,4 @@ jobs:
 
             如需获得使用此储存库以及商品的授权，请联系作者 Sonic853 (sonic853@qq.com) 获取授权或访问 [爱发电](https://afdian.com/a/Sonic853) 手动获取授权。
           tag_name: ${{ steps.read_version.outputs.current_version }}
-          files: ${{ steps.read_version.outputs.name }}.zip
+          files: ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip
