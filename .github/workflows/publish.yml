@@ -84,3 +84,12 @@ jobs:
             如需获得使用此储存库以及商品的授权，请联系作者 Sonic853 (sonic853@qq.com) 获取授权或访问 [爱发电](https://afdian.com/a/Sonic853) 手动获取授权。
           tag_name: ${{ steps.read_version.outputs.current_version }}
           files: ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip
+
+      - name: Dispatch version to vpm-repos
+        if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          repository: Sonic853/vpm-repos
+          event-type: publish-vpm
+          client-payload: '{"repository": "${{ github.repository }}", "path": "${{ github.event.repository.name }}", "name": "${{ steps.read_version.outputs.name }}", "version": "${{ steps.read_version.outputs.current_version }}"}'
