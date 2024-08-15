@@ -3,14 +3,14 @@
 # Installation method (VCC):
 Click the "Add Repository" button under Settings → Packages and enter the following URL:
 
-https://page.853lab.com/vpm.json
+https://page.853lab.com/vpm-repos/vpm.json
 
 Then add the "Udon Url Loader" package to the project.
 
 # 安装方法（VCC）：
 在 Settings → Packages 下点击“Add Repository”按钮后输入以下URL：
 
-https://page.853lab.com/vpm.json
+https://page.853lab.com/vpm-repos/vpm.json
 
 随后在项目添加“Udon Url Loader”包。
 
