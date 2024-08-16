@@ -89,7 +89,7 @@ jobs:
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           repository: Sonic853/vpm-repos
           event-type: publish-vpm
           client-payload: '{"repository": "${{ github.repository }}", "path": "${{ github.event.repository.name }}", "name": "${{ steps.read_version.outputs.name }}", "version": "${{ steps.read_version.outputs.current_version }}"}'
