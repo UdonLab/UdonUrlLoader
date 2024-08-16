@@ -37,6 +37,11 @@ jobs:
           echo "current_version=$current_version" >> $GITHUB_OUTPUT
           echo "name=$name" >> $GITHUB_OUTPUT
 
+      - name: Checkout repository to Packages
+        uses: actions/checkout@v4
+        with:
+          path: Packages/${{ steps.read_version.outputs.name }}
+
       - name: Create Tag
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
         uses: rickstaa/action-create-tag@v1
@@ -52,6 +57,17 @@ jobs:
         id: zip
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
         run: echo "hash=$(shasum -a 256 ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip | awk '{ print $1 }')" >> $GITHUB_OUTPUT
+
+      - name: Track Package Meta Files
+        if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
+        run: find "Packages/${{ steps.read_version.outputs.name }}" -name \*.meta >> metaList
+
+      - name: Create UnityPackage
+        if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
+        uses: pCYSl5EDgo/create-unitypackage@master
+        with:
+          package-path: ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.unitypackage
+          include-files: metaList
 
       - name: Release
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
@@ -88,7 +104,9 @@ jobs:
 
             如需获得使用此储存库以及商品的授权，请联系作者 Sonic853 (sonic853@qq.com) 获取授权或访问 [爱发电](https://afdian.com/a/Sonic853) 手动获取授权。
           tag_name: ${{ steps.read_version.outputs.current_version }}
-          files: ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip
+          files: |
+            ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip
+            ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.unitypackage
 
       - name: Dispatch version to vpm-repos
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
