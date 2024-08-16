@@ -51,7 +51,7 @@ jobs:
       - name: Create ZIP archive
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
         run: |
-          zip -r ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip . -x ".git*" ".github*"
+          zip -r ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip . -x ".git*" ".github*" "Packages*"
 
       - name: Read zip sha256
         id: zip
