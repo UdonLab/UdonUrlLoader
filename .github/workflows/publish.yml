@@ -48,6 +48,11 @@ jobs:
         run: |
           zip -r ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip . -x ".git*" ".github*"
 
+      - name: Read zip sha256
+        id: zip
+        if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
+        run: echo "hash=$(shasum -a 256 ${{ steps.read_version.outputs.name }}-${{ steps.read_version.outputs.current_version }}.zip | awk '{ print $1 }')" >> $GITHUB_OUTPUT
+
       - name: Release
         if: steps.read_version.outputs.last_tag != steps.read_version.outputs.current_version
         uses: softprops/action-gh-release@v2
@@ -92,4 +97,4 @@ jobs:
           token: ${{ secrets.PAT }}
           repository: Sonic853/vpm-repos
           event-type: publish-vpm
-          client-payload: '{"repository": "${{ github.repository }}", "path": "${{ github.event.repository.name }}", "name": "${{ steps.read_version.outputs.name }}", "version": "${{ steps.read_version.outputs.current_version }}"}'
+          client-payload: '{"repository": "${{ github.repository }}", "path": "${{ github.event.repository.name }}", "name": "${{ steps.read_version.outputs.name }}", "version": "${{ steps.read_version.outputs.current_version }}", "hash": "${{ steps.zip.outputs.hash }}"}'
