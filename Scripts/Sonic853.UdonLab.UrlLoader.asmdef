@@ -1,10 +1,10 @@
 {
-    "name": "UdonLab.UrlLoader",
+    "name": "Sonic853.UdonLab.UrlLoader",
     "rootNamespace": "",
     "references": [
         "VRC.Udon",
         "UdonSharp.Runtime",
-        "UdonLab.ArrayPlus"
+        "Sonic853.UdonLab.ArrayPlus"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

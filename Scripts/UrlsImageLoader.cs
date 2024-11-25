@@ -77,7 +77,7 @@ namespace UdonLab.UrlLoader
                 }
                 else
                 {
-                    cacheContents[urli] = result.Result;
+                    cacheContents.SetValue(result.Result, urli);
                 }
             }
             // contents.SetValue(result.Result, 0);

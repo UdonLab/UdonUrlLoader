@@ -61,7 +61,7 @@ MonoBehaviour:
       Data: 3|System.RuntimeType, mscorlib
     - Name: 
       Entry: 1
-      Data: UdonLab.UrlLoader.UrlsLoaderCore, UdonLab.UrlLoader
+      Data: UdonLab.UrlLoader.UrlsLoaderCore, Sonic853.UdonLab.UrlLoader
     - Name: 
       Entry: 8
       Data: 
