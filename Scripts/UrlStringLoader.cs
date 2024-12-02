@@ -1,12 +1,13 @@
 ﻿
 using System;
+using Sonic853.Udon.ArrayPlus;
 using UdonSharp;
 using UnityEngine;
 using VRC.SDK3.StringLoading;
 using VRC.SDKBase;
 using VRC.Udon;
 
-namespace UdonLab.UrlLoader
+namespace Sonic853.Udon.UrlLoader
 {
     public class UrlStringLoader : UrlLoaderCore
     {

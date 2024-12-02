@@ -6,7 +6,7 @@ using VRC.SDK3.StringLoading;
 using VRC.SDKBase;
 using VRC.Udon;
 
-namespace UdonLab.UrlLoader
+namespace Sonic853.Udon.UrlLoader
 {
     public class UrlBigImageLoader : UdonSharpBehaviour
     {

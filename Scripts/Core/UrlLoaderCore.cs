@@ -5,7 +5,7 @@ using UnityEngine;
 using VRC.SDKBase;
 using VRC.Udon;
 
-namespace UdonLab.UrlLoader
+namespace Sonic853.Udon.UrlLoader
 {
     public class UrlLoaderCore : UdonSharpBehaviour
     {
