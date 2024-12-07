@@ -13,9 +13,14 @@ namespace Sonic853.Udon.UrlLoader
         public UdonBehaviour udonSendFunction;
         public string sendCustomEvent = "SendFunction";
         public string setVariableName = "value";
+        public bool startOnLoad = false;
+        void Start()
+        {
+            if (startOnLoad) SubmitUrl();
+        }
         public void SubmitUrl()
         {
-            UrlLoader.PushUrl(url, udonSendFunction, sendCustomEvent, setVariableName);
+            if (!string.IsNullOrEmpty(url.ToString())) UrlLoader.PushUrl(url, udonSendFunction, sendCustomEvent, setVariableName);
         }
         public void SendFunction() => SubmitUrl();
         public void SendFunctions() => SubmitUrl();
