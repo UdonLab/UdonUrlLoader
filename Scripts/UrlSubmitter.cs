@@ -14,10 +14,20 @@ namespace Sonic853.Udon.UrlLoader
         public string sendCustomEvent = "SendFunction";
         public string setVariableName = "value";
         public bool startOnLoad = false;
+        public bool useUpdate = false;
         void Start()
         {
             if (startOnLoad) SubmitUrl();
         }
+        void Update()
+        {
+            if (useUpdate)
+            {
+                useUpdate = false;
+                SubmitUrl();
+            }
+        }
+        public void SubmitUrlWithUpdate() => useUpdate = true;
         public void SubmitUrl()
         {
             if (!string.IsNullOrEmpty(url.ToString())) UrlLoader.PushUrl(url, udonSendFunction, sendCustomEvent, setVariableName);

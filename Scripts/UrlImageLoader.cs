@@ -14,11 +14,20 @@ namespace Sonic853.Udon.UrlLoader
         public Texture2D content;
         VRCImageDownloader _imageDownloader;
         public Texture2D[] cacheContents;
+        bool useUpdateDownload = false;
         void Start()
         {
             _imageDownloader = new VRCImageDownloader();
             if (loadOnStart)
             {
+                useUpdateDownload = true;
+            }
+        }
+        void Update()
+        {
+            if (useUpdateDownload)
+            {
+                useUpdateDownload = false;
                 LoadUrl();
             }
         }
