@@ -87,7 +87,8 @@ namespace Sonic853.Udon.UrlLoader
                 }
                 else
                 {
-                    cacheContents.SetValue(result.Result, urli);
+                    // cacheContents.SetValue(result.Result, urli);
+                    cacheContents[urli] = result.Result;
                 }
             }
             // contents.SetValue(result.Result, 0);
