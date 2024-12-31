@@ -42,7 +42,14 @@ namespace Sonic853.Udon.UrlLoader
             {
                 if (isLoading) return;
                 isLoading = true;
-                _imageDownloader.DownloadImage(urls[0], null, GetComponent<UdonBehaviour>(), null);
+                var gameobj = (UdonBehaviour)GetComponent(typeof(UdonBehaviour));
+                if (gameobj == null || _imageDownloader == null)
+                {
+                    isLoading = false;
+                    useUpdateDownload = true;
+                    return;
+                }
+                _imageDownloader.DownloadImage(urls[0], null, gameobj, null);
             }
         }
         public override void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName, bool reload = false)
