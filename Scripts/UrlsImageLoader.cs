@@ -13,25 +13,16 @@ namespace Sonic853.Udon.UrlLoader
     {
         VRCImageDownloader _imageDownloader;
         public Texture2D[] cacheContents;
-        bool useUpdateDownload = false;
         void Start()
         {
             _imageDownloader = new VRCImageDownloader();
             if (urls.Length > 0)
                 useUpdateDownload = true;
         }
-        void Update()
-        {
-            if (useUpdateDownload)
-            {
-                useUpdateDownload = false;
-                LoadUrl();
-            }
-        }
-        public override void LoadUrl() => LoadUrl(needReloads[0]);
         public override void LoadUrl(bool reload = false)
         {
-            if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, urls[0], out var index) != -1)
+            var url = useAlt ? altUrls[0] : urls[0];
+            if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, url, out var index) != -1)
             {
                 SendFunction(udonSendFunctions[0], sendCustomEvents[0], setVariableNames[0], cacheContents[index]);
                 DelUrl();
@@ -49,10 +40,10 @@ namespace Sonic853.Udon.UrlLoader
                     useUpdateDownload = true;
                     return;
                 }
-                _imageDownloader.DownloadImage(urls[0], null, gameobj, null);
+                _imageDownloader.DownloadImage(url, null, gameobj, null);
             }
         }
-        public override void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName, bool reload = false)
+        public override void PushUrl(VRCUrl url, VRCUrl altUrl, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName, bool reload = false)
         {
             if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, url, out var index) != -1)
             {
@@ -61,6 +52,7 @@ namespace Sonic853.Udon.UrlLoader
             else
             {
                 UdonArrayPlus.Add(ref urls, url);
+                UdonArrayPlus.Add(ref altUrls, altUrl);
                 UdonArrayPlus.Add(ref isLoaded, false);
                 UdonArrayPlus.Add(ref udonSendFunctions, udonSendFunction);
                 UdonArrayPlus.Add(ref sendCustomEvents, sendCustomEvent);
@@ -68,12 +60,13 @@ namespace Sonic853.Udon.UrlLoader
                 UdonArrayPlus.Add(ref needReloads, reload);
             }
             if (urls.Length > 0)
-                LoadUrl();
+                useUpdateDownload = true;
         }
         public void DelUrl() => DelUrl(0);
         public void DelUrl(int index)
         {
             UdonArrayPlus.RemoveAt(ref urls, index);
+            UdonArrayPlus.RemoveAt(ref altUrls, index);
             UdonArrayPlus.RemoveAt(ref udonSendFunctions, index);
             UdonArrayPlus.RemoveAt(ref sendCustomEvents, index);
             UdonArrayPlus.RemoveAt(ref setVariableNames, index);
@@ -119,6 +112,19 @@ namespace Sonic853.Udon.UrlLoader
             {
                 _retryCount++;
                 Debug.LogWarning($"UdonLab.UrlLoader.UrlsImageLoader: {result.Error} Could not load {result.Url} : {result.ErrorMessage} retrying {_retryCount}/{retryCount}");
+                LoadUrl();
+                return;
+            }
+            if (
+                !useAlt
+                && altUrls[0] != null
+                && !string.IsNullOrEmpty(altUrls[0].ToString())
+                && altUrls[0].ToString() != urls[0].ToString()
+            )
+            {
+                Debug.LogWarning($"UdonLab.UrlLoader.UrlsImageLoader: {result.Error} Could not load {result.Url} : {result.ErrorMessage} trying alt url");
+                useAlt = true;
+                _retryCount = 0;
                 LoadUrl();
                 return;
             }

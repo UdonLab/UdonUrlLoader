@@ -10,6 +10,7 @@ namespace Sonic853.Udon.UrlLoader
     {
         public UrlsLoaderCore UrlLoader;
         public VRCUrl url;
+        public VRCUrl altUrl;
         public UdonBehaviour udonSendFunction;
         public string sendCustomEvent = "SendFunction";
         public string setVariableName = "value";
@@ -30,7 +31,7 @@ namespace Sonic853.Udon.UrlLoader
         public void SubmitUrlWithUpdate() => useUpdate = true;
         public void SubmitUrl()
         {
-            if (!string.IsNullOrEmpty(url.ToString())) UrlLoader.PushUrl(url, udonSendFunction, sendCustomEvent, setVariableName);
+            if (!string.IsNullOrEmpty(url.ToString())) UrlLoader.PushUrl(url, altUrl, udonSendFunction, sendCustomEvent, setVariableName);
         }
         public void SendFunction() => SubmitUrl();
         public void SendFunctions() => SubmitUrl();
