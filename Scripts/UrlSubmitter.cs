@@ -16,16 +16,24 @@ namespace Sonic853.Udon.UrlLoader
         public string setVariableName = "value";
         public bool startOnLoad = false;
         public bool useUpdate = false;
+        protected bool UseUpdate
+        {
+            get => UseUpdate;
+            set
+            {
+                enabled = UseUpdate = value;
+            }
+        }
         void Start()
         {
             if (startOnLoad) SubmitUrl();
         }
         void Update()
         {
-            if (useUpdate)
+            if (UseUpdate)
             {
-                useUpdate = false;
                 SubmitUrl();
+                UseUpdate = false;
             }
         }
         public void SubmitUrlWithUpdate() => useUpdate = true;

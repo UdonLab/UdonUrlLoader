@@ -17,7 +17,7 @@ namespace Sonic853.Udon.UrlLoader
         {
             _imageDownloader = new VRCImageDownloader();
             if (urls.Length > 0)
-                useUpdateDownload = true;
+                UseUpdateDownload = true;
         }
         public override void LoadUrl(bool reload = false)
         {
@@ -37,7 +37,7 @@ namespace Sonic853.Udon.UrlLoader
                 if (gameobj == null || _imageDownloader == null)
                 {
                     isLoading = false;
-                    useUpdateDownload = true;
+                    UseUpdateDownload = true;
                     return;
                 }
                 _imageDownloader.DownloadImage(url, null, gameobj, null);
@@ -53,14 +53,13 @@ namespace Sonic853.Udon.UrlLoader
             {
                 UdonArrayPlus.Add(ref urls, url);
                 UdonArrayPlus.Add(ref altUrls, altUrl);
-                UdonArrayPlus.Add(ref isLoaded, false);
                 UdonArrayPlus.Add(ref udonSendFunctions, udonSendFunction);
                 UdonArrayPlus.Add(ref sendCustomEvents, sendCustomEvent);
                 UdonArrayPlus.Add(ref setVariableNames, setVariableName);
                 UdonArrayPlus.Add(ref needReloads, reload);
             }
             if (urls.Length > 0)
-                useUpdateDownload = true;
+                UseUpdateDownload = true;
         }
         public void DelUrl() => DelUrl(0);
         public void DelUrl(int index)
@@ -76,7 +75,7 @@ namespace Sonic853.Udon.UrlLoader
         {
             isLoading = false;
             _retryCount = 0;
-            var url = urls[0];
+            var url = useAlt ? altUrls[0] : urls[0];
             if (cacheContent)
             {
                 UdonArrayPlus.IndexOf(cacheUrls, url, out var urli);
@@ -87,12 +86,9 @@ namespace Sonic853.Udon.UrlLoader
                 }
                 else
                 {
-                    // cacheContents.SetValue(result.Result, urli);
                     cacheContents[urli] = result.Result;
                 }
             }
-            // contents.SetValue(result.Result, 0);
-            // SendFunction(udonSendFunctions[0], sendCustomEvents[0], setVariableNames[0], contents[0]);
             SendFunction(udonSendFunctions[0], sendCustomEvents[0], setVariableNames[0], result.Result);
             DelUrl();
             UdonArrayPlus.IndexOf(urls, url, out var _urli);
@@ -102,6 +98,7 @@ namespace Sonic853.Udon.UrlLoader
                 DelUrl(_urli);
                 UdonArrayPlus.IndexOf(urls, url, out _urli);
             }
+            useAlt = false;
             if (urls.Length > 0)
                 LoadUrl();
         }
@@ -131,6 +128,7 @@ namespace Sonic853.Udon.UrlLoader
             Debug.LogError($"UdonLab.UrlLoader.UrlsImageLoader: {result.Error} Could not load {result.Url} : {result.ErrorMessage}");
             DelUrl();
             _retryCount = 0;
+            useAlt = false;
             if (urls.Length > 0)
                 LoadUrl();
         }

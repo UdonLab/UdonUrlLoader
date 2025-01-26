@@ -10,8 +10,11 @@ namespace Sonic853.Udon.UrlLoader
     public class UrlLoaderCore : UdonSharpBehaviour
     {
         public VRCUrl url;
+        public VRCUrl altUrl;
+        public bool useAlt = false;
         public bool loadOnStart = true;
-        [NonSerialized] public bool isLoaded = false;
+        public bool isLoading = false;
+        // [NonSerialized] public bool isLoaded = false;
         public UdonBehaviour udonSendFunction;
         public string sendCustomEvent = "SendFunction";
         public string setVariableName = "value";
@@ -19,6 +22,23 @@ namespace Sonic853.Udon.UrlLoader
         protected int _retryCount = 0;
         public bool cacheContent = false;
         public VRCUrl[] cacheUrls;
+        bool useUpdateDownload = false;
+        protected bool UseUpdateDownload
+        {
+            get => useUpdateDownload;
+            set
+            {
+                enabled = useUpdateDownload = value;
+            }
+        }
+        void Update()
+        {
+            if (UseUpdateDownload)
+            {
+                LoadUrl();
+                UseUpdateDownload = false;
+            }
+        }
         public virtual void LoadUrl() => LoadUrl(false);
         public virtual void LoadUrl(bool reload = false)
         {

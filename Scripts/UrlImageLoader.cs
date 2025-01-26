@@ -14,48 +14,46 @@ namespace Sonic853.Udon.UrlLoader
         public Texture2D content;
         VRCImageDownloader _imageDownloader;
         public Texture2D[] cacheContents;
-        bool useUpdateDownload = false;
         void Start()
         {
             _imageDownloader = new VRCImageDownloader();
             if (loadOnStart)
-            {
-                useUpdateDownload = true;
-            }
-        }
-        void Update()
-        {
-            if (useUpdateDownload)
-            {
-                useUpdateDownload = false;
-                LoadUrl();
-            }
+                UseUpdateDownload = true;
         }
         public override void LoadUrl(bool reload = false)
         {
-            if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, url, out var index) != -1)
+            var _url = useAlt ? altUrl : url;
+            if (!reload && cacheContent && UdonArrayPlus.IndexOf(cacheUrls, _url, out var index) != -1)
             {
+                useAlt = false;
                 SendFunction(udonSendFunction, sendCustomEvent, setVariableName, cacheContents[index]);
             }
             else
             {
-                if (string.IsNullOrEmpty(url.ToString()))
+                if (isLoading) return;
+                isLoading = true;
+                var gameobj = (UdonBehaviour)GetComponent(typeof(UdonBehaviour));
+                if (gameobj == null || _imageDownloader == null)
+                {
+                    isLoading = false;
+                    UseUpdateDownload = true;
                     return;
-                isLoaded = false;
-                _imageDownloader.DownloadImage(url, null, GetComponent<UdonBehaviour>(), null);
+                }
+                _imageDownloader.DownloadImage(_url, null, gameobj, null);
             }
         }
         public override void OnImageLoadSuccess(IVRCImageDownload result)
         {
-            isLoaded = true;
+            isLoading = false;
             _retryCount = 0;
+            var _url = useAlt ? altUrl : url;
             if (cacheContent)
             {
-                var urli = UdonArrayPlus.IndexOf(cacheUrls, url);
+                UdonArrayPlus.IndexOf(cacheUrls, _url, out var urli);
                 if (urli == -1)
                 {
-                    cacheUrls = UdonArrayPlus.Add(cacheUrls, url);
-                    cacheContents = UdonArrayPlus.Add(cacheContents, result.Result);
+                    UdonArrayPlus.Add(ref cacheUrls, _url);
+                    UdonArrayPlus.Add(ref cacheContents, result.Result);
                 }
                 else
                 {
@@ -63,11 +61,12 @@ namespace Sonic853.Udon.UrlLoader
                 }
             }
             content = result.Result;
+            useAlt = false;
             SendFunction(udonSendFunction, sendCustomEvent, setVariableName, content);
         }
         public override void OnImageLoadError(IVRCImageDownload result)
         {
-            isLoaded = true;
+            isLoading = false;
             if (_retryCount < retryCount)
             {
                 _retryCount++;
@@ -75,7 +74,21 @@ namespace Sonic853.Udon.UrlLoader
                 LoadUrl();
                 return;
             }
+            if (
+                !useAlt
+                && altUrl != null
+                && !string.IsNullOrEmpty(altUrl.ToString())
+                && altUrl.ToString() != url.ToString()
+            )
+            {
+                Debug.LogWarning($"UdonLab.UrlLoader.UrlImageLoader: {result.Error} Could not load {result.Url} : {result.ErrorMessage} trying alt url");
+                useAlt = true;
+                _retryCount = 0;
+                LoadUrl();
+                return;
+            }
             Debug.LogError($"UdonLab.UrlLoader.UrlImageLoader: {result.Error} Could not load {result.Url} : {result.ErrorMessage} ");
+            useAlt = false;
             _retryCount = 0;
         }
     }

@@ -12,12 +12,11 @@ namespace Sonic853.Udon.UrlLoader
 {
     public class UrlsStringLoader : UrlsLoaderCore
     {
-        // public string[] contents;
         public string[] cacheContents;
         void Start()
         {
             if (urls.Length > 0)
-                useUpdateDownload = true;
+                UseUpdateDownload = true;
         }
         public override void LoadUrl(bool reload = false)
         {
@@ -46,7 +45,6 @@ namespace Sonic853.Udon.UrlLoader
             {
                 UdonArrayPlus.Add(ref urls, url);
                 UdonArrayPlus.Add(ref altUrls, altUrl);
-                UdonArrayPlus.Add(ref isLoaded, false);
                 UdonArrayPlus.Add(ref udonSendFunctions, udonSendFunction);
                 UdonArrayPlus.Add(ref sendCustomEvents, sendCustomEvent);
                 UdonArrayPlus.Add(ref setVariableNames, setVariableName);
@@ -69,7 +67,7 @@ namespace Sonic853.Udon.UrlLoader
         {
             isLoading = false;
             _retryCount = 0;
-            var url = urls[0];
+            var url = useAlt ? altUrls[0] : urls[0];
             if (cacheContent)
             {
                 UdonArrayPlus.IndexOf(cacheUrls, url, out var urli);
@@ -83,8 +81,6 @@ namespace Sonic853.Udon.UrlLoader
                     cacheContents[urli] = result.Result;
                 }
             }
-            // contents.SetValue(result.Result, 0);
-            // SendFunction(udonSendFunctions[0], sendCustomEvents[0], setVariableNames[0], contents[0]);
             SendFunction(udonSendFunctions[0], sendCustomEvents[0], setVariableNames[0], result.Result);
             DelUrl();
             UdonArrayPlus.IndexOf(urls, url, out var _urli);
@@ -94,6 +90,7 @@ namespace Sonic853.Udon.UrlLoader
                 DelUrl(_urli);
                 UdonArrayPlus.IndexOf(urls, url, out _urli);
             }
+            useAlt = false;
             if (urls.Length > 0)
                 LoadUrl();
         }
@@ -123,6 +120,7 @@ namespace Sonic853.Udon.UrlLoader
             Debug.LogError($"UdonLab.UrlLoader.UrlsStringLoader: {result.ErrorCode} Could not load {result.Url} with error: {result.Error}");
             DelUrl();
             _retryCount = 0;
+            useAlt = false;
             if (urls.Length > 0)
                 LoadUrl();
         }

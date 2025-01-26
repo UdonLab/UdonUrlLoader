@@ -13,7 +13,7 @@ namespace Sonic853.Udon.UrlLoader
         public VRCUrl[] altUrls;
         public bool useAlt = false;
         public bool isLoading = false;
-        [NonSerialized] public bool[] isLoaded = new bool[0];
+        // [NonSerialized] public bool[] isLoaded = new bool[0];
         public UdonBehaviour[] udonSendFunctions;
         public string[] sendCustomEvents;
         public string[] setVariableNames;
@@ -22,13 +22,21 @@ namespace Sonic853.Udon.UrlLoader
         protected int _retryCount = 0;
         public bool cacheContent = false;
         public VRCUrl[] cacheUrls;
-        protected bool useUpdateDownload = false;
+        bool useUpdateDownload = false;
+        protected bool UseUpdateDownload
+        {
+            get => useUpdateDownload;
+            set
+            {
+                enabled = useUpdateDownload = value;
+            }
+        }
         void Update()
         {
-            if (useUpdateDownload)
+            if (UseUpdateDownload)
             {
-                useUpdateDownload = false;
                 LoadUrl();
+                UseUpdateDownload = false;
             }
         }
         public virtual void LoadUrl() => LoadUrl(needReloads[0]);
