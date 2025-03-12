@@ -44,7 +44,6 @@ namespace Sonic853.Udon.UrlLoader
         {
             Debug.LogError("Don't use this class directly, use UrlsImageLoader or UrlsStringLoader");
         }
-        public virtual void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName) => PushUrl(url, null, udonSendFunction, sendCustomEvent, setVariableName, false);
         public virtual void PushUrl(VRCUrl url, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName, bool reload = false) => PushUrl(url, null, udonSendFunction, sendCustomEvent, setVariableName, reload);
         public virtual void PushUrl(VRCUrl url, VRCUrl altUrl, UdonBehaviour udonSendFunction, string sendCustomEvent, string setVariableName, bool reload = false)
         {

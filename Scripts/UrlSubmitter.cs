@@ -18,10 +18,10 @@ namespace Sonic853.Udon.UrlLoader
         public bool useUpdate = false;
         protected bool UseUpdate
         {
-            get => UseUpdate;
+            get => useUpdate;
             set
             {
-                enabled = UseUpdate = value;
+                enabled = useUpdate = value;
             }
         }
         void Start()
@@ -36,7 +36,7 @@ namespace Sonic853.Udon.UrlLoader
                 UseUpdate = false;
             }
         }
-        public void SubmitUrlWithUpdate() => useUpdate = true;
+        public void SubmitUrlWithUpdate() => UseUpdate = true;
         public void SubmitUrl()
         {
             if (!string.IsNullOrEmpty(url.ToString())) UrlLoader.PushUrl(url, altUrl, udonSendFunction, sendCustomEvent, setVariableName);

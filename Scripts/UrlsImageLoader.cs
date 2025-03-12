@@ -62,7 +62,7 @@ namespace Sonic853.Udon.UrlLoader
                 UseUpdateDownload = true;
         }
         public void DelUrl() => DelUrl(0);
-        public void DelUrl(int index)
+        public void DelUrl(int index = 0)
         {
             UdonArrayPlus.RemoveAt(ref urls, index);
             UdonArrayPlus.RemoveAt(ref altUrls, index);
